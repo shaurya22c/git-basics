@@ -127,3 +127,21 @@ apply and remove stash
 
 git stash drop stash@{1}
 delete a specific stash
+
+************************************************************************************************
+
+just fyi:
+
+initial basic commands:
+
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+
+git remote add origin https://github.com/<username>/<reponame>.git
+this command sets original repository value to a particular repo
+
+git push -u origin main
+
+you might need to generate ssh key as password authentication is disabled to complete push operation.
