@@ -145,3 +145,7 @@ this command sets original repository value to a particular repo
 git push -u origin main
 
 you might need to generate ssh key as password authentication is disabled to complete push operation.
+
+adding line for first commit
+adding line for second commit
+adding line for third commit
