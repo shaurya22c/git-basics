@@ -1,0 +1,129 @@
+-> Trunk based development in git: 
+
+work with only main branch (known as trunk)
+
+we push only one single commit(patchset) to main branch(trunk) and create Change list (CL) which is PR in traditional git.
+
+we keep commit history clean (no merge commits, no multiple commits from a single branch since we squash them into one).
+
+git rebase is preferred most.
+
+-> Squash your local commits into one and prepare a patchset. Rebase to main branch to keep your branch up to date and then create a CL by pushing that patchset to main.
+
+Important Git/Gerrit concepts:
+
+
+1. git checkout -b <new-branch-name> <base-branch-name>
+check new branch -b means branch based off some branch
+
+2. git add -A
+add all modified files to staging area
+
+git reset <filename>
+remove file from staging area
+
+3. git commit --amend --no-edit
+modify or amend most recent commit without editing commit message.
+
+git commit --amend -m "New updated commit message"
+modify or amend most recent commit and edit commit message.
+
+git reset --soft HEAD~1
+delete most recent commit, but keep changes locally
+
+git reset --hard HEAD~1
+delete most recent commit and discard changes as well.
+
+4. git push origin HEAD:refs/for/main
+
+push means push change from local to remote repository
+origin means original repository which was cloned
+HEAD means latest commit
+refs/for/main is used in Gerrit to push change to main branch
+
+
+git push origin <feature-branch-name>
+push local commits on feature-branch-name to original repo.
+
+5. git review -d 585/5
+fetch a change submitted to gerrit with 585 as changelist id and 5 as patchset number.
+
+6. git cherry-pick <commit-hash>
+apply a specific commit from a branch to your current branch 
+
+git cherry-pick -n FETCH_HEAD
+
+
+7. git squash, rebase
+
+git log --oneline
+review the list of commits
+
+git rebase -i HEAD~<number-of-commits>
+-> rebasing means changing base of a branch, -i means interactive mode and it opens vim editor, choose n latest commits to squash into one.
+-> rebasing changes base of current branch to tip of main branch, so you will not have merge commit in commit history and so commit history will be clean. Used more in trunk based development.
+-> git rebasing to be used only on private branches and not on public branch.
+e.g. do git rebase on your local feature branch and not on main branch.
+
+make following change on vim editor,edit commit message, save and close:
+pick abcdef1 First commit
+   squash abcdef2 Second commit
+   squash abcdef3 Third commit
+   squash abcdef4 Fourth commit
+
+
+git push origin <branch-name> --force
+After squashing the commits, you will need to force-push the changes since the commit history has been rewritten.
+
+
+8. git fetch origin
+download all changes from original remote repository (ndas) without any changes locally on your current branch.
+e.g. feature-branch-2, feature-branch-3 changes are merged on main branch, this command will download those changes but will not apply to your current branch.
+
+9. git merge origin/feature-branch-2
+after fetching, if you want to integrate changes from a particular branch, this command merges change from feature-branch-2 to your local branch
+
+
+10. git pull origin feature-branch2
+pull = fetch + merge
+pull changes and add it to your local branch
+
+11. git pull vs git rebase
+pull: it will fetch and merge changes to your local branch and hence create new merge commit in commit history.
+rebase: moves base of your current branch to latest commit, so there will be no merge commit and commit history is clean
+
+12. git rebase steps:
+
+git fetch origin
+git rebase origin/main
+
+13. git track
+a local branch is linked to remote branch
+git branch -vv
+this command shows which remote branches your local branches are tracking
+
+sample output:
+* my-feature 1234567 [origin/my-feature] Commit message
+  main		 89abcdw [origin/main] Commit message
+
+14. git blame
+used to know author of each line of a file. gitlens extension gives you this facility by default.
+
+15. git stash
+if you made changes locally but don't want to commit them, use git stash
+
+git stash list
+list of all stash
+
+output:
+stash@{0}: WIP on branch1: 1234567 Commit message
+stash@{1}: WIP on branch2: 89abcde Another commit message
+
+git stash apply stash@{1}
+applies a particuar stash
+
+git stash pop stash@{1}
+apply and remove stash
+
+git stash drop stash@{1}
+delete a specific stash
